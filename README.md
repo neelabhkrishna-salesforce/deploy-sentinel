@@ -47,7 +47,7 @@ It uses all three Agentia extension points:
 Requirements: Node.js 22.12 or newer and the Agentia CLI (`npm install -g @copado/agentia-cli@beta`).
 
 ```bash
-git clone <this-repo> deploy-sentinel && cd deploy-sentinel
+git clone https://github.com/neelabhkrishna-salesforce/deploy-sentinel.git && cd deploy-sentinel
 npm install
 npm run build
 npm test
