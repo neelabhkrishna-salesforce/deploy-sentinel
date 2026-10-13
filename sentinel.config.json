@@ -1,0 +1,59 @@
+{
+  "sourceRoot": "force-app/main/default",
+  "alwaysRun": {
+    "tag": "smoke-critical",
+    "description": "Login, global search and account creation run on every deployment"
+  },
+  "areas": [
+    {
+      "name": "Opportunity management",
+      "tag": "smoke-opportunity",
+      "metadata": [
+        "objects/Opportunity/**",
+        "objects/OpportunityLineItem/**",
+        "flows/Opportunity*",
+        "classes/Opportunity*",
+        "triggers/Opportunity*",
+        "layouts/Opportunity-*",
+        "flexipages/Opportunity*",
+        "lwc/*discount*/**",
+        "lwc/*opportunity*/**"
+      ],
+      "tests": ["*Opportunity*", "*.Opportunity.*"]
+    },
+    {
+      "name": "Lead conversion",
+      "tag": "smoke-lead",
+      "metadata": ["objects/Lead/**", "flows/Lead*", "classes/Lead*", "triggers/Lead*", "layouts/Lead-*", "flexipages/Lead*"],
+      "tests": ["*Lead*"]
+    },
+    {
+      "name": "Case management",
+      "tag": "smoke-case",
+      "metadata": ["objects/Case/**", "flows/Case*", "classes/Case*", "triggers/Case*", "layouts/Case-*", "flexipages/Case*", "queues/**"],
+      "tests": ["*Case*"]
+    },
+    {
+      "name": "Quotes",
+      "tag": "smoke-quote",
+      "metadata": ["objects/Quote/**", "objects/QuoteLineItem/**", "flows/Quote*", "classes/Quote*", "triggers/Quote*"],
+      "tests": ["*Quote*"]
+    },
+    {
+      "name": "Access and security",
+      "tag": "smoke-access",
+      "metadata": ["profiles/**", "permissionsets/**", "permissionsetgroups/**", "sharingRules/**"],
+      "tests": ["*.Access.*"]
+    }
+  ],
+  "crt": {
+    "projectId": "<crt-project-id>",
+    "jobId": "<crt-smoke-job-id>",
+    "record": "failed"
+  },
+  "jira": {
+    "projectKey": "QA",
+    "issueType": "Bug",
+    "labels": ["deploy-sentinel", "post-deployment"]
+  }
+}

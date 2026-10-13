@@ -1,0 +1,9 @@
+{
+  "name": "deploy-sentinel-demo",
+  "private": true,
+  "type": "module",
+  "description": "Builds the demo video, slide deck and simulated evidence screenshots for Deploy Sentinel",
+  "dependencies": {
+    "playwright-core": "1.64.0-alpha-1790635538000"
+  }
+}

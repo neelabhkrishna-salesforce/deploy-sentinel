@@ -1,0 +1,10 @@
+node_modules/
+dist/
+oclif.manifest.json
+*.tsbuildinfo
+.sf/
+.agentia/
+out/
+demo/node_modules/
+demo/build/
+.env

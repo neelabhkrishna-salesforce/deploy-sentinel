@@ -1,0 +1,11 @@
+{
+  "id": "a0R5g00000SIMUL01",
+  "name": "US-0001234",
+  "title": "Require approval for Opportunity discounts above 10%",
+  "status": "Promoted",
+  "baseBranch": "main",
+  "projectName": "Sales Cloud Releases",
+  "sourceEnvironmentName": "UAT",
+  "sprint": "Sprint 42",
+  "acceptanceCriteria": "Sales reps cannot close an Opportunity with a discount above 10% until a Sales Manager approves it. The Opportunity page shows a discount approval banner."
+}

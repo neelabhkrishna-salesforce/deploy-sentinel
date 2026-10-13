@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Simulated CRT run output in the Robot Framework xUnit format. Not from a real org. -->
+<testsuite name="Smoke" tests="10" errors="0" failures="4" skipped="0" time="187.400" timestamp="2026-10-13T09:12:04.000">
+  <testcase classname="Smoke.Critical Path" name="Login As Sales User" time="9.800"/>
+  <testcase classname="Smoke.Critical Path" name="Global Search Finds Account" time="7.200"/>
+  <testcase classname="Smoke.Critical Path" name="Create Account" time="14.100"/>
+  <testcase classname="Smoke.Opportunity" name="Create Opportunity" time="18.600"/>
+  <testcase classname="Smoke.Opportunity" name="Close Opportunity As Won" time="21.300">
+    <failure message="FIELD_CUSTOM_VALIDATION_EXCEPTION: Discounts above 10% need Sales Manager approval before closing. [Discount_Requires_Approval] on record 0065g00000Xa1bCAAR" type="AssertionError">Save failed on Opportunity 0065g00000Xa1bCAAR (Discount_Percent__c = 0). Validation rule Discount_Requires_Approval fired although the discount is 0%.</failure>
+  </testcase>
+  <testcase classname="Smoke.Opportunity" name="Close Opportunity With Small Discount" time="22.900">
+    <failure message="FIELD_CUSTOM_VALIDATION_EXCEPTION: Discounts above 10% need Sales Manager approval before closing. [Discount_Requires_Approval] on record 0065g00000Xa1bDAAR" type="AssertionError">Save failed on Opportunity 0065g00000Xa1bDAAR (Discount_Percent__c = 5). Validation rule Discount_Requires_Approval fired for a 5% discount.</failure>
+  </testcase>
+  <testcase classname="Smoke.Opportunity" name="Opportunity Page Shows Discount Banner" time="31.500">
+    <failure message="QWeb: Text 'Discount approval required' not found on page within 30 seconds" type="QWebElementNotFoundError">VerifyText Discount approval required failed. The discountApprovalBanner component did not render on Opportunity_Record_Page.</failure>
+  </testcase>
+  <testcase classname="Smoke.Access" name="Sales User Can Edit Opportunity" time="16.200"/>
+  <testcase classname="Smoke.Access" name="Sales Manager Can Approve Discount" time="24.800">
+    <failure message="INSUFFICIENT_ACCESS_OR_READONLY: You don't have access to edit the field Discount_Percent__c" type="AssertionError">Sales Manager user could not edit Discount_Percent__c. Check field permissions in Sales_Discount_Approver.</failure>
+  </testcase>
+  <testcase classname="Smoke.Access" name="Sales User Cannot Approve Discount" time="21.000"/>
+</testsuite>

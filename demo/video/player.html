@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Deploy Sentinel demo</title>
+<style>
+:root{--bg:#0b1020;--panel:#121a33;--ink:#eef2ff;--muted:#9aa6c7;--blue:#3b82f6;--cyan:#22d3ee;--red:#f43f5e;--green:#22c55e;--amber:#f59e0b;--line:#24304f}
+*{box-sizing:border-box}html,body{margin:0;width:1920px;height:1080px;overflow:hidden;background:var(--bg);color:var(--ink);font-family:-apple-system,"SF Pro Display","Segoe UI",Helvetica,Arial,sans-serif}
+#stage{position:absolute;inset:0}
+.scene{position:absolute;inset:0;padding:90px 120px 215px;display:flex;flex-direction:column}
+.glow{position:absolute;inset:0;background:radial-gradient(1200px 700px at 80% -10%,rgba(59,130,246,.25),transparent 60%),radial-gradient(900px 600px at -10% 110%,rgba(34,211,238,.18),transparent 60%);pointer-events:none}
+.brand{position:absolute;left:60px;bottom:40px;color:var(--muted);font-size:20px;letter-spacing:.3px}
+.brand b{color:var(--ink)}
+.chip{position:absolute;right:60px;top:36px;background:rgba(245,158,11,.14);border:1px solid rgba(245,158,11,.5);color:#fcd34d;border-radius:999px;padding:8px 18px;font-size:20px;font-weight:600}
+.progress{position:absolute;left:0;bottom:0;height:6px;background:linear-gradient(90deg,var(--blue),var(--cyan))}
+.caption{position:absolute;left:50%;bottom:92px;transform:translateX(-50%);max-width:1500px;background:rgba(0,0,0,.72);border-radius:14px;padding:14px 26px;font-size:30px;line-height:1.35;text-align:center}
+.eyebrow{color:var(--cyan);font-weight:700;letter-spacing:4px;text-transform:uppercase;font-size:22px}
+h1{font-size:96px;margin:18px 0 10px;letter-spacing:-2px}h2{font-size:58px;margin:10px 0 30px;letter-spacing:-1px}
+.sub{font-size:36px;color:var(--muted);max-width:1400px;line-height:1.35}
+.who{margin-top:56px;display:flex;align-items:center;gap:22px}.avatar{width:84px;height:84px;border-radius:50%;background:linear-gradient(135deg,var(--blue),var(--cyan));display:flex;align-items:center;justify-content:center;font-size:34px;font-weight:800}
+.who .n{font-size:36px;font-weight:700}.who .r{font-size:26px;color:var(--muted)}
+.list{display:flex;flex-direction:column;gap:24px;margin-top:10px}
+.item{display:flex;gap:22px;align-items:flex-start;font-size:36px;line-height:1.3;transition:none}.item .dot{flex:none;width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:26px}
+.flow{display:flex;align-items:stretch;gap:22px;margin-top:20px}.box{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:22px;padding:26px}
+.box .k{font-size:20px;letter-spacing:2px;text-transform:uppercase;font-weight:700}.box .t{font-size:32px;font-weight:700;margin:10px 0}.box code{font-size:21px;color:var(--cyan)}.box p{font-size:24px;color:var(--muted);margin:10px 0 0;line-height:1.35}
+.arrow{align-self:center;font-size:44px;color:var(--muted)}
+.term{flex:1;background:#0a0e1a;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.term .bar{height:46px;background:#151c33;display:flex;align-items:center;gap:10px;padding:0 18px;color:var(--muted);font-size:18px}.term .bar i{width:14px;height:14px;border-radius:50%;display:inline-block}
+.term .body{flex:1;position:relative;overflow:hidden}.term pre{position:absolute;left:0;right:0;top:0;margin:0;padding:22px 28px;font:21px/1.42 "SF Mono",Menlo,Monaco,monospace;white-space:pre;color:#d7def7}
+.prompt{color:var(--green)}.cmd{color:#fff}.hl{background:rgba(59,130,246,.28);border-radius:4px}.red{color:#fb7185}.grn{color:#4ade80}.amb{color:#fcd34d}.cur{display:inline-block;width:12px;height:24px;background:#d7def7;vertical-align:-4px}
+.shot{flex:1;position:relative;overflow:hidden;border-radius:18px;border:1px solid var(--line);background:#f3f3f3;box-shadow:0 30px 80px rgba(0,0,0,.45)}.shot img{position:absolute;left:50%;top:0;width:1400px;transform:translateX(-50%)}
+.jira{flex:1;background:#fff;color:#172b4d;border-radius:18px;padding:34px 40px;overflow:hidden;font-size:22px;line-height:1.45;box-shadow:0 30px 80px rgba(0,0,0,.45)}
+.jira .key{color:#0052cc;font-weight:700}.jira h3{font-size:32px;margin:6px 0 18px}.jira .meta{display:flex;gap:14px;margin-bottom:16px;flex-wrap:wrap}.jira .meta span{background:#dfe1e6;border-radius:4px;padding:3px 10px;font-size:18px;font-weight:600}
+.jira .meta span.p{background:#ffebe6;color:#bf2600}.jira h4{margin:16px 0 6px;font-size:22px}.jira pre{background:#f4f5f7;border-radius:6px;padding:10px 14px;white-space:pre-wrap;font-size:19px;margin:0}
+.jira .cols{display:grid;grid-template-columns:1.25fr 1fr;gap:34px}.jira img{width:100%;border:1px solid #dfe1e6;border-radius:6px}
+.code{flex:1;background:#0a0e1a;border:1px solid var(--line);border-radius:18px;overflow:hidden;display:flex;flex-direction:column}.code .bar{height:46px;flex:none;background:#151c33;display:flex;align-items:center;gap:10px;padding:0 18px;color:var(--muted);font-size:18px}.code .bar i{width:14px;height:14px;border-radius:50%;display:inline-block}
+.code pre{margin:0;padding:20px 30px;font:20px/1.5 "SF Mono",Menlo,monospace;white-space:pre;overflow:hidden;color:#c7d2fe}
+.code .h{color:#f0abfc;font-weight:700}.code .on{background:rgba(34,211,238,.16);border-left:4px solid var(--cyan);margin-left:-30px;padding-left:26px;display:inline-block;min-width:calc(100% + 30px)}
+.pillrow{display:flex;gap:18px;margin-top:40px}.pill{border-radius:999px;padding:12px 26px;font-size:26px;font-weight:700;background:var(--panel);border:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<script>
+const esc = (s) => String(s).replace(/[&<>]/g, (c) => ({'&': '&amp;', '<': '&lt;', '>': '&gt;'})[c])
+const clamp = (v, a = 0, b = 1) => Math.max(a, Math.min(b, v))
+const ease = (x) => 1 - Math.pow(1 - clamp(x), 3)
+const fade = (local, dur) => clamp(Math.min(local / 0.45, (dur - local) / 0.35))
+
+function colorize(line) {
+  let html = esc(line)
+  html = html.replace(/\b(RED)\b/g, '<span class="red">$1</span>').replace(/\b(GREEN|passed)\b/g, '<span class="grn">$1</span>')
+  html = html.replace(/(SIMULATION:[^\n]*)/, '<span class="amb">$1</span>').replace(/(✓)/g, '<span class="grn">$1</span>')
+  html = html.replace(/\b(\d+ failed|failed)\b/g, '<span class="red">$1</span>')
+  return html
+}
+
+function terminal(scene, local, dur) {
+  const steps = scene.steps
+  const per = dur / steps.length
+  let html = ''
+  let lines = 0
+  steps.forEach((step, i) => {
+    const t = local - i * per * 0.98
+    if (t < 0) return
+    const typeDur = Math.min(1.6, 0.04 * step.cmd.length + 0.4)
+    const typed = step.cmd.slice(0, Math.floor(step.cmd.length * clamp(t / typeDur)))
+    const done = t >= typeDur + 0.25
+    html += `<span class="prompt">neelabh@mac deploy-sentinel %</span> <span class="cmd">${esc(typed)}</span>${done ? '' : '<span class="cur"></span>'}\n`
+    lines++
+    if (!done) return
+    const out = step.output.split('\n')
+    const revealDur = Math.max(0.6, Math.min(per * 0.45, out.length * 0.06))
+    const shown = Math.ceil(out.length * clamp((t - typeDur - 0.25) / revealDur))
+    out.slice(0, shown).forEach((line) => {
+      const hit = step.highlight && line.includes(step.highlight)
+      html += (hit ? `<span class="hl">${colorize(line)}</span>` : colorize(line)) + '\n'
+      lines++
+    })
+  })
+  return `<div class="eyebrow">${esc(scene.eyebrow)}</div><h2>${esc(scene.title)}</h2>
+  <div class="term"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>&nbsp; zsh — agentia</div>
+  <div class="body"><pre>${html}</pre></div></div>`
+}
+
+const render = {
+  title(scene, local) {
+    const a = ease(local / 1.2)
+    return `<div style="margin:auto 0;opacity:${a};transform:translateY(${(1 - a) * 30}px)">
+      <div class="eyebrow">${esc(scene.eyebrow)}</div><h1>${esc(scene.title)}</h1><div class="sub">${esc(scene.subtitle)}</div>
+      <div class="who"><div class="avatar">NK</div><div><div class="n">${esc(DATA.author.name)}</div><div class="r">${esc(DATA.author.role)}</div></div></div></div>`
+  },
+  list(scene, local, dur) {
+    const per = (dur * 0.7) / scene.items.length
+    const items = scene.items.map((item, i) => {
+      const a = ease((local - 0.6 - i * per) / 0.6)
+      return `<div class="item" style="opacity:${a};transform:translateX(${(1 - a) * -30}px)"><div class="dot" style="background:${item.color}">${esc(item.icon)}</div><div>${esc(item.text)}</div></div>`
+    })
+    return `<div class="eyebrow">${esc(scene.eyebrow)}</div><h2>${esc(scene.title)}</h2><div class="list">${items.join('')}</div>`
+  },
+  flow(scene, local, dur) {
+    const per = (dur * 0.75) / scene.boxes.length
+    const parts = []
+    scene.boxes.forEach((box, i) => {
+      const a = ease((local - 0.5 - i * per) / 0.6)
+      if (i > 0) parts.push(`<div class="arrow" style="opacity:${a}">→</div>`)
+      parts.push(`<div class="box" style="opacity:${a};transform:translateY(${(1 - a) * 30}px);border-color:${a > 0.9 && local < 0.5 + (i + 1) * per ? box.color : 'var(--line)'}">
+        <div class="k" style="color:${box.color}">${esc(box.kind)}</div><div class="t">${esc(box.title)}</div><code>${esc(box.code)}</code><p>${esc(box.text)}</p></div>`)
+    })
+    return `<div class="eyebrow">${esc(scene.eyebrow)}</div><h2>${esc(scene.title)}</h2><div class="flow">${parts.join('')}</div>
+      <div class="pillrow" style="opacity:${ease((local - dur * 0.8) / 0.6)}">${scene.pills.map((p) => `<div class="pill">${esc(p)}</div>`).join('')}</div>`
+  },
+  terminal,
+  scroll(scene, local, dur) {
+    const p = ease(clamp((local - 1.2) / (dur - 2.6)))
+    return `<div class="eyebrow">${esc(scene.eyebrow)}</div><h2>${esc(scene.title)}</h2>
+      <div class="shot" data-progress="${p}"><img src="${scene.image}"></div>`
+  },
+  jira(scene) {
+    const b = scene.bug
+    return `<div class="eyebrow">${esc(scene.eyebrow)}</div><h2>${esc(scene.title)}</h2>
+      <div class="jira"><div class="key">${esc(b.project)} · ${esc(b.key)} · Draft</div><h3>${esc(b.summary)}</h3>
+      <div class="meta"><span>${esc(b.type)}</span><span class="p">Priority: ${esc(b.priority)}</span>${b.labels.map((l) => `<span>${esc(l)}</span>`).join('')}</div>
+      <div class="cols"><div><h4>Error</h4><pre>${esc(b.error)}</pre><h4>Likely cause</h4><div>${esc(b.hint)}</div><ul>${b.causes.map((c) => `<li>${esc(c)}</li>`).join('')}</ul>
+      <h4>Deployment</h4><div>${b.deployment.map(esc).join('<br>')}</div></div><div><h4>Evidence</h4><img src="${b.screenshot}"><div style="font-size:17px;color:#5e6c84">${esc(b.screenshotName)} · log.html</div></div></div></div>`
+  },
+  code(scene, local, dur) {
+    const lines = scene.lines.map((line, i) => {
+      const on = scene.focus.includes(i) && local > 1 + (scene.focus.indexOf(i) * (dur - 2)) / scene.focus.length
+      const cls = line.startsWith('#') ? 'h' : ''
+      return `<span class="${cls}${on ? ' on' : ''}">${esc(line) || ' '}</span>`
+    })
+    return `<div class="eyebrow">${esc(scene.eyebrow)}</div><h2>${esc(scene.title)}</h2>
+      <div class="code"><div class="bar"><i style="background:#ff5f57"></i><i style="background:#febc2e"></i><i style="background:#28c840"></i>&nbsp; ${esc(scene.file)}</div><pre>${lines.join('\n')}</pre></div>`
+  },
+}
+
+function caption(scene, local) {
+  const sentences = scene.narration.match(/[^.!?]+[.!?]+/g) ?? [scene.narration]
+  const total = scene.narration.length
+  const speech = scene.audioDuration
+  let acc = 0
+  for (const sentence of sentences) {
+    acc += sentence.length
+    if (local - scene.audioOffset <= (acc / total) * speech) return sentence.trim()
+  }
+  return local - scene.audioOffset <= speech + 0.3 ? sentences.at(-1).trim() : ''
+}
+
+window.renderAt = (t) => {
+  let start = 0
+  let scene = DATA.scenes.at(-1)
+  for (const s of DATA.scenes) {
+    if (t < start + s.duration) { scene = s; break }
+    start += s.duration
+  }
+  const local = Math.min(t - start, scene.duration)
+  const alpha = fade(local, scene.duration)
+  const cap = local >= scene.audioOffset ? caption(scene, local) : ''
+  document.getElementById('stage').innerHTML = `<div class="glow"></div>
+    <div class="scene" style="opacity:${alpha}">${render[scene.type](scene, local, scene.duration)}</div>
+    ${scene.sample ? '<div class="chip">Sample data · no Copado org connected</div>' : ''}
+    ${cap ? `<div class="caption">${esc(cap)}</div>` : ''}
+    <div class="brand"><b>Deploy Sentinel</b> · ${esc(DATA.author.name)} · Agentia™ Headless Virtual Hackathon 2026</div>
+    <div class="progress" style="width:${(t / DATA.total) * 100}%"></div>`
+
+  // Keep the newest terminal line in view, and scroll screenshots by measured height.
+  const pre = document.querySelector('.term .body pre')
+  if (pre) pre.style.transform = `translateY(${-Math.max(0, pre.offsetHeight - pre.parentElement.clientHeight)}px)`
+  const shot = document.querySelector('.shot')
+  if (shot) {
+    const img = shot.querySelector('img')
+    const travel = Math.max(0, img.offsetHeight - shot.clientHeight)
+    img.style.transform = `translate(-50%, ${-travel * Number(shot.dataset.progress)}px)`
+  }
+}
+</script>
+</body>
+</html>

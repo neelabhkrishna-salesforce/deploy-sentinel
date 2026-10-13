@@ -1,0 +1,5 @@
+{
+  "environment": "UAT",
+  "promotion": "P-00042 (Dev -> UAT)",
+  "crtBuild": "sim-build-7781"
+}
